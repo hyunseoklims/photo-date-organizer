@@ -10,7 +10,7 @@ h1 { font-size: clamp(28px, 5vw, 42px); margin: 0; letter-spacing: -.05em; }
 h2 { font-size: 16px; margin: 0 0 16px; }
 .folder-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid #ecece8; padding: 14px 0 0; margin-top: 14px; }
 .folder-row:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
-.folder-row div { min-width: 0; display: grid; gap: 4px; }
+.folder-row div { min-width: 0; display: grid; gap: 4px; flex: 1; }
 .folder-row span { color: #666; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 520px; }
 button, select { font: inherit; }
 button { border: 1px solid #c9c9c4; border-radius: 8px; padding: 10px 14px; background: #fff; cursor: pointer; font-weight: 700; }
@@ -27,6 +27,7 @@ small { color: #777; margin-left: 6px; }
 .preview-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 #progress { color: #666; font-size: 13px; white-space: nowrap; }
 .preview { height: 230px; overflow: auto; border: 1px solid #deded9; border-radius: 8px; padding: 12px; background: #fafaf8; white-space: pre-wrap; line-height: 1.75; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+.preview-button { margin-top: 12px; }
 .actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
 .primary { background: #111; color: #fff; border-color: #111; padding-inline: 22px; }
 .primary:hover { background: #333; }

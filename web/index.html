@@ -18,11 +18,11 @@
       <h2 id="folder-title">폴더 선택</h2>
       <div class="folder-row">
         <button type="button" id="select-source">원본 폴더 선택</button>
-        <div><strong>원본 폴더</strong><span id="source-name">선택되지 않음</span></div>
+        <div class="folder-path"><span id="source-name">선택되지 않음</span></div>
       </div>
       <div class="folder-row">
         <button type="button" id="select-destination">결과 폴더 선택</button>
-        <div><strong>결과 폴더</strong><span id="destination-name">선택되지 않음</span></div>
+        <div class="folder-path"><span id="destination-name">선택되지 않음</span></div>
       </div>
     </section>
 
@@ -31,10 +31,10 @@
       <div class="setting-row grouping-row">
         <span class="setting-label">파일 종류</span>
         <div class="choices file-types">
+          <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음 <small>예: 미선택시 원본폴더에 보관</small></label>
           <label><input type="checkbox" id="include-photos" checked> 사진</label>
           <label><input type="checkbox" id="include-videos"> 영상</label>
           <label><input type="checkbox" id="include-other"> 기타 파일</label>
-          <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음</label>
         </div>
       </div>
       <div class="setting-row grouping-row">
@@ -60,11 +60,11 @@
         <h2 id="preview-title">결과 미리보기</h2>
         <span id="progress" aria-live="polite">준비됨</span>
       </div>
-      <div id="preview" class="preview" aria-live="polite">원본 폴더를 선택한 뒤 결과 미리보기를 눌러주세요.</div>
+      <div id="preview" class="preview" aria-live="polite"></div>
+      <button type="button" class="secondary preview-button" id="preview-button">결과 미리보기</button>
     </section>
 
     <div class="actions">
-      <button type="button" class="secondary" id="preview-button">결과 미리보기</button>
       <button type="button" class="primary" id="organize-button">▶ 사진 정리 시작</button>
     </div>
     <p class="notice">Chrome 또는 Edge에서 사용하세요. 원본 사진은 복사되며 삭제되지 않습니다.</p>

@@ -109,6 +109,9 @@ function displayFolder(parts, count, includeCount) {
 
 async function buildPlan() {
   if (!state.source) throw new Error("원본 폴더를 선택하세요.");
+  if (state.destination && await state.source.isSameEntry(state.destination)) {
+    throw new Error("원본 폴더와 결과 폴더는 서로 다르게 선택하세요.");
+  }
   const config = settings();
   setProgress("사진을 찾는 중...");
   const files = await walkDirectory(state.source);
