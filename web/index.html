@@ -31,7 +31,6 @@
       <div class="setting-row grouping-row">
         <span class="setting-label">파일 종류</span>
         <div class="choices file-types">
-          <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음 <small>예: 미선택시 원본폴더에 보관</small></label>
           <label><input type="checkbox" id="include-photos" checked> 사진</label>
           <label><input type="checkbox" id="include-videos"> 영상</label>
           <label><input type="checkbox" id="include-other"> 기타 파일</label>
@@ -49,8 +48,14 @@
       <div class="detail-settings">
         <span class="setting-label">세부 설정</span>
         <div class="detail-options">
+          <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음 <small>예: 미선택시 원본폴더에 보관</small></label>
           <label><input type="checkbox" id="include-count" checked> 폴더명 뒤에 사진 수 표시 <small>예: 05일 (12장)</small></label>
           <label><input type="checkbox" id="include-date-labels" checked> 년-월-일 입력 <small>예: 2024년 / 03월 / 05일</small></label>
+          <fieldset class="action-options">
+            <legend>처리 방식</legend>
+            <label><input type="radio" name="action" value="copy" checked> 복사 (원본 보관)</label>
+            <label><input type="radio" name="action" value="move"> 이동 (원본 삭제)</label>
+          </fieldset>
         </div>
       </div>
     </section>
@@ -61,7 +66,7 @@
         <span id="progress" aria-live="polite">준비됨</span>
       </div>
       <div id="preview" class="preview" aria-live="polite"></div>
-      <button type="button" class="secondary preview-button" id="preview-button">결과 미리보기</button>
+      <button type="button" class="secondary preview-button" id="preview-button">미리 보기</button>
     </section>
 
     <div class="actions">

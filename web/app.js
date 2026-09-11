@@ -32,6 +32,7 @@ function settings() {
     includeVideos: document.querySelector("#include-videos").checked,
     includeOther: document.querySelector("#include-other").checked,
     routeEtc: document.querySelector("#route-etc").checked,
+    action: document.querySelector('input[name="action"]:checked').value,
   };
 }
 
@@ -61,7 +62,7 @@ async function walkDirectory(directory, prefix = "") {
       continue;
     }
     const extension = name.split(".").pop().toLowerCase();
-    files.push({ file: await handle.getFile(), name, relativePath: `${prefix}${name}`, type: PHOTO_EXTENSIONS.has(extension) ? "photo" : VIDEO_EXTENSIONS.has(extension) ? "video" : "other" });
+    files.push({ handle, file: await handle.getFile(), name, relativePath: `${prefix}${name}`, type: PHOTO_EXTENSIONS.has(extension) ? "photo" : VIDEO_EXTENSIONS.has(extension) ? "video" : "other" });
   }
   return files;
 }
@@ -196,6 +197,7 @@ async function organizePhotos() {
       const writable = await target.createWritable();
       await writable.write(item.file);
       await writable.close();
+      if (config.action === "move") await item.handle.remove();
       setProgress(`정리 중 (${String(index + 1).padStart(3, "0")} / ${String(state.plan.length).padStart(3, "0")}장)`);
     }
     preview.textContent += `\n\n정리가 완료되었습니다. 결과 폴더: ${state.destination.name}`;
