@@ -40,6 +40,7 @@ small { color: #777; margin-left: 6px; }
 .progress-dialog h2 { margin-bottom: 18px; }
 .progress-dialog progress { width: 100%; height: 18px; accent-color: #111; }
 .dialog-result { min-height: 22px; color: #555; }
+.result-file-list { max-height: 220px; overflow: auto; margin-top: 12px; padding: 12px; border: 1px solid #deded9; border-radius: 8px; background: #fafaf8; white-space: pre-wrap; line-height: 1.65; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
-.dialog-actions #open-result-folder { background: #111; color: #fff; border-color: #111; }
+.dialog-actions #show-result-files { background: #111; color: #fff; border-color: #111; }
 @media (max-width: 720px) { .setting-row, .detail-settings { align-items: flex-start; flex-direction: column; gap: 8px; } .setting-label { width: auto; } .folder-row { align-items: flex-start; flex-direction: column; } .actions { flex-direction: column; } .primary, .secondary { width: 100%; } }

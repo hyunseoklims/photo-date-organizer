@@ -1,6 +1,6 @@
 const PHOTO_EXTENSIONS = new Set(["jpg", "jpeg", "png", "tif", "tiff", "webp", "heic", "heif", "bmp"]);
 const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "wmv", "webm", "m4v", "3gp", "mts", "m2ts"]);
-const state = { source: null, destination: null, files: [], plan: [] };
+const state = { source: null, destination: null, files: [], plan: [], resultFiles: [] };
 
 const sourceName = document.querySelector("#source-name");
 const destinationName = document.querySelector("#destination-name");
@@ -13,7 +13,8 @@ const progressDialog = document.querySelector("#progress-dialog");
 const dialogProgressText = document.querySelector("#dialog-progress-text");
 const dialogProgressBar = document.querySelector("#dialog-progress-bar");
 const dialogResult = document.querySelector("#dialog-result");
-const openResultFolderButton = document.querySelector("#open-result-folder");
+const showResultFilesButton = document.querySelector("#show-result-files");
+const resultFileList = document.querySelector("#result-file-list");
 const closeProgressDialogButton = document.querySelector("#close-progress-dialog");
 
 for (let day = 1; day <= 31; day += 1) {
@@ -28,7 +29,10 @@ function openProgressDialog(total) {
   dialogProgressText.textContent = `정리 준비 중 (000 / ${String(total).padStart(3, "0")}개)`;
   dialogProgressBar.value = 0;
   dialogResult.textContent = "";
-  openResultFolderButton.hidden = true;
+  showResultFilesButton.hidden = true;
+  showResultFilesButton.textContent = "결과 파일 목록 보기";
+  resultFileList.hidden = true;
+  resultFileList.textContent = "";
   closeProgressDialogButton.disabled = true;
   if (!progressDialog.open) progressDialog.showModal();
 }
@@ -207,6 +211,7 @@ async function organizePhotos() {
     openProgressDialog(0);
     const { counts, config } = await buildPlan();
     openProgressDialog(state.plan.length);
+    state.resultFiles = [];
     for (let index = 0; index < state.plan.length; index += 1) {
       const item = state.plan[index];
       const parts = item.parts.map((part, partIndex) => (
@@ -219,6 +224,7 @@ async function organizePhotos() {
       const writable = await target.createWritable();
       await writable.write(item.file);
       await writable.close();
+      state.resultFiles.push(`${parts.join("/")}/${target.name}`);
       if (config.action === "move") await item.handle.remove();
       setProgress(`정리 중 (${String(index + 1).padStart(3, "0")} / ${String(state.plan.length).padStart(3, "0")}장)`);
       updateDialogProgress(index + 1, state.plan.length);
@@ -227,7 +233,7 @@ async function organizePhotos() {
     setProgress(`완료 (${state.plan.length} / ${state.plan.length}장)`);
     dialogProgressText.textContent = "작업이 완료되었습니다.";
     dialogResult.textContent = `결과 폴더: ${state.destination.name}`;
-    openResultFolderButton.hidden = false;
+    showResultFilesButton.hidden = false;
     closeProgressDialogButton.disabled = false;
   } catch (error) {
     preview.textContent += `\n\n오류: ${error.message}`;
@@ -251,11 +257,10 @@ document.querySelectorAll('input[name="grouping"]').forEach((input) => input.add
 previewButton.addEventListener("click", previewResults);
 organizeButton.addEventListener("click", organizePhotos);
 closeProgressDialogButton.addEventListener("click", () => progressDialog.close());
-openResultFolderButton.addEventListener("click", async () => {
-  try {
-    await window.showDirectoryPicker({ mode: "read", startIn: state.destination });
-  } catch (error) {
-    if (error.name !== "AbortError") alert(error.message);
-  }
+showResultFilesButton.addEventListener("click", () => {
+  const shouldShow = resultFileList.hidden;
+  resultFileList.hidden = !shouldShow;
+  showResultFilesButton.textContent = shouldShow ? "결과 파일 목록 닫기" : "결과 파일 목록 보기";
+  if (shouldShow) resultFileList.textContent = state.resultFiles.join("\n") || "생성된 파일이 없습니다.";
 });
 updateIntervalState();
