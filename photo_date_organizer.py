@@ -107,51 +107,53 @@ class PhotoOrganizer(tk.Tk):
         self._folder_row(main, "원본 폴더", self.source, False)
         self._folder_row(main, "정리할 폴더", self.destination, True)
 
-        options = ttk.LabelFrame(main, text="정리 설정", padding=8)
+        options = ttk.LabelFrame(main, text="정리 설정", padding=10)
         options.pack(fill="x", **pad)
-        ttk.Label(options, text="정리 기준").grid(row=0, column=0, sticky="w", pady=5)
+        ttk.Label(options, text="정리 기준").grid(row=0, column=0, sticky="w", pady=(2, 5))
         criteria_buttons = ttk.Frame(options)
         criteria_buttons.grid(row=0, column=1, sticky="w", padx=(3, 5))
         ttk.Radiobutton(criteria_buttons, text="연도별", variable=self.grouping, value="year", command=self.update_grouping_controls).pack(side="left", padx=(0, 2))
         ttk.Radiobutton(criteria_buttons, text="월별 (연도 포함)", variable=self.grouping, value="month", command=self.update_grouping_controls).pack(side="left", padx=2)
         ttk.Radiobutton(criteria_buttons, text="일별 (연도/월 포함)", variable=self.grouping, value="day", command=self.update_grouping_controls).pack(side="left", padx=(2, 0))
-        self.day_range_label = ttk.Label(options, text="날짜 간격")
-        self.day_range_label.grid(row=0, column=2, sticky="w", padx=(2, 3))
+        interval_controls = ttk.Frame(options)
+        interval_controls.grid(row=0, column=2, columnspan=3, sticky="w", padx=(2, 0))
+        self.day_range_label = ttk.Label(interval_controls, text="날짜 간격")
+        self.day_range_label.pack(side="left", padx=(0, 3))
         self.day_interval_box = ttk.Combobox(
-            options,
+            interval_controls,
             textvariable=self.day_interval,
             values=tuple(str(day) for day in range(1, 32)),
             state="readonly",
             width=4,
         )
-        self.day_interval_box.grid(row=0, column=3, sticky="w")
-        ttk.Label(options, text="일").grid(row=0, column=4, sticky="w", padx=(3, 0))
-        ttk.Label(options, text="세부 설정").grid(row=1, column=0, rowspan=2, sticky="nw", pady=(4, 0))
+        self.day_interval_box.pack(side="left")
+        ttk.Label(interval_controls, text="일").pack(side="left", padx=(3, 0))
+        ttk.Label(options, text="세부 설정").grid(row=1, column=0, rowspan=2, sticky="nw", pady=(6, 0))
         ttk.Checkbutton(
             options,
             text="폴더명 뒤에 사진 수 표시",
             variable=self.include_count,
-        ).grid(row=1, column=1, sticky="w", padx=4, pady=(2, 0))
-        ttk.Label(options, text="예: 05일 (12장)").grid(row=1, column=2, sticky="w", padx=4, pady=(2, 0))
+        ).grid(row=1, column=1, sticky="w", padx=4, pady=(6, 0))
+        ttk.Label(options, text="예: 05일 (12장)").grid(row=1, column=2, sticky="w", padx=4, pady=(6, 0))
         ttk.Checkbutton(
             options,
             text="년-월-일 입력",
             variable=self.include_date_labels,
-        ).grid(row=2, column=1, sticky="w", padx=4, pady=(1, 0))
-        ttk.Label(options, text="예: 2024년 / 03월 / 05일").grid(row=2, column=2, sticky="w", padx=4, pady=(1, 0))
-        ttk.Label(options, text="처리 방식").grid(row=3, column=0, sticky="w", pady=(2, 0))
+        ).grid(row=2, column=1, sticky="w", padx=4, pady=(4, 0))
+        ttk.Label(options, text="예: 2024년 / 03월 / 05일").grid(row=2, column=2, sticky="w", padx=4, pady=(4, 0))
+        ttk.Label(options, text="처리 방식").grid(row=3, column=0, sticky="w", pady=(6, 2))
         ttk.Radiobutton(
             options,
             text="복사 (원본 보존)",
             variable=self.action,
             value="copy",
-        ).grid(row=3, column=1, sticky="w", padx=4, pady=(2, 0))
+        ).grid(row=3, column=1, sticky="w", padx=4, pady=(6, 2))
         ttk.Radiobutton(
             options,
             text="이동 (원본에서 제거)",
             variable=self.action,
             value="move",
-        ).grid(row=3, column=2, sticky="w", padx=4, pady=(2, 0))
+        ).grid(row=3, column=2, sticky="w", padx=4, pady=(6, 2))
         self.update_grouping_controls()
 
         buttons = ttk.Frame(main)
