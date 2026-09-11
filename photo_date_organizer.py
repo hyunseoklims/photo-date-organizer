@@ -15,6 +15,7 @@ except ImportError:
 
 
 PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".heic", ".heif", ".bmp"}
+VIDEO_EXTENSIONS = {".mp4", ".mov", ".avi", ".mkv", ".wmv", ".webm", ".m4v", ".3gp", ".mts", ".m2ts"}
 
 
 def read_capture_date(path: Path):
@@ -48,6 +49,10 @@ class PhotoOrganizer(tk.Tk):
         self.day_interval = tk.StringVar(value="1")
         self.include_count = tk.BooleanVar(value=True)
         self.include_date_labels = tk.BooleanVar(value=True)
+        self.include_photos = tk.BooleanVar(value=True)
+        self.include_videos = tk.BooleanVar(value=False)
+        self.include_other = tk.BooleanVar(value=False)
+        self.route_etc = tk.BooleanVar(value=True)
         self.action = tk.StringVar(value="copy")
         self.status = tk.StringVar()
         self.progress = tk.DoubleVar(value=0)
@@ -109,14 +114,21 @@ class PhotoOrganizer(tk.Tk):
 
         options = ttk.LabelFrame(main, text="정리 설정", padding=10)
         options.pack(fill="x", **pad)
-        ttk.Label(options, text="정리 기준").grid(row=0, column=0, sticky="w", pady=(2, 5))
+        ttk.Label(options, text="파일 종류").grid(row=0, column=0, sticky="w", pady=(2, 5))
+        file_types = ttk.Frame(options)
+        file_types.grid(row=0, column=1, columnspan=3, sticky="w", padx=4, pady=(2, 5))
+        ttk.Checkbutton(file_types, text="사진", variable=self.include_photos).pack(side="left", padx=(0, 6))
+        ttk.Checkbutton(file_types, text="영상", variable=self.include_videos).pack(side="left", padx=6)
+        ttk.Checkbutton(file_types, text="기타 파일", variable=self.include_other).pack(side="left", padx=6)
+        ttk.Checkbutton(file_types, text="미선택 파일은 ETC 폴더로 모음", variable=self.route_etc).pack(side="left", padx=6)
+        ttk.Label(options, text="정리 기준").grid(row=1, column=0, sticky="w", pady=(2, 5))
         criteria_buttons = ttk.Frame(options)
-        criteria_buttons.grid(row=0, column=1, sticky="w", padx=(3, 5))
+        criteria_buttons.grid(row=1, column=1, sticky="w", padx=(3, 5))
         ttk.Radiobutton(criteria_buttons, text="연도별", variable=self.grouping, value="year", command=self.update_grouping_controls).pack(side="left", padx=(0, 2))
         ttk.Radiobutton(criteria_buttons, text="월별 (연도 포함)", variable=self.grouping, value="month", command=self.update_grouping_controls).pack(side="left", padx=2)
         ttk.Radiobutton(criteria_buttons, text="일별 (연도/월 포함)", variable=self.grouping, value="day", command=self.update_grouping_controls).pack(side="left", padx=(2, 0))
         interval_controls = ttk.Frame(options)
-        interval_controls.grid(row=0, column=2, columnspan=3, sticky="w", padx=(2, 0))
+        interval_controls.grid(row=1, column=2, columnspan=3, sticky="w", padx=(2, 0))
         self.day_range_label = ttk.Label(interval_controls, text="날짜 간격")
         self.day_range_label.pack(side="left", padx=(0, 3))
         self.day_interval_box = ttk.Combobox(
@@ -128,32 +140,32 @@ class PhotoOrganizer(tk.Tk):
         )
         self.day_interval_box.pack(side="left")
         ttk.Label(interval_controls, text="일").pack(side="left", padx=(3, 0))
-        ttk.Label(options, text="세부 설정").grid(row=1, column=0, rowspan=2, sticky="nw", pady=(6, 0))
+        ttk.Label(options, text="세부 설정").grid(row=2, column=0, rowspan=2, sticky="nw", pady=(6, 0))
         ttk.Checkbutton(
             options,
             text="폴더명 뒤에 사진 수 표시",
             variable=self.include_count,
-        ).grid(row=1, column=1, sticky="w", padx=4, pady=(6, 0))
-        ttk.Label(options, text="예: 05일 (12장)").grid(row=1, column=2, sticky="w", padx=4, pady=(6, 0))
+        ).grid(row=2, column=1, sticky="w", padx=4, pady=(6, 0))
+        ttk.Label(options, text="예: 05일 (12장)").grid(row=2, column=2, sticky="w", padx=4, pady=(6, 0))
         ttk.Checkbutton(
             options,
             text="년-월-일 입력",
             variable=self.include_date_labels,
-        ).grid(row=2, column=1, sticky="w", padx=4, pady=(4, 0))
-        ttk.Label(options, text="예: 2024년 / 03월 / 05일").grid(row=2, column=2, sticky="w", padx=4, pady=(4, 0))
-        ttk.Label(options, text="처리 방식").grid(row=3, column=0, sticky="w", pady=(6, 2))
+        ).grid(row=3, column=1, sticky="w", padx=4, pady=(4, 0))
+        ttk.Label(options, text="예: 2024년 / 03월 / 05일").grid(row=3, column=2, sticky="w", padx=4, pady=(4, 0))
+        ttk.Label(options, text="처리 방식").grid(row=4, column=0, sticky="w", pady=(6, 2))
         ttk.Radiobutton(
             options,
             text="복사 (원본 보존)",
             variable=self.action,
             value="copy",
-        ).grid(row=3, column=1, sticky="w", padx=4, pady=(6, 2))
+        ).grid(row=4, column=1, sticky="w", padx=4, pady=(6, 2))
         ttk.Radiobutton(
             options,
             text="이동 (원본에서 제거)",
             variable=self.action,
             value="move",
-        ).grid(row=3, column=2, sticky="w", padx=4, pady=(6, 2))
+        ).grid(row=4, column=2, sticky="w", padx=4, pady=(6, 2))
         self.update_grouping_controls()
 
         buttons = ttk.Frame(main)
@@ -202,9 +214,9 @@ class PhotoOrganizer(tk.Tk):
     def _folder_row(self, parent, label, variable, is_destination):
         row = ttk.Frame(parent)
         row.pack(fill="x", padx=8, pady=4)
+        ttk.Button(row, text="찾아보기", command=lambda: self.choose_folder(variable, is_destination)).pack(side="left")
         ttk.Label(row, text=label, width=12).pack(side="left")
         ttk.Entry(row, textvariable=variable).pack(side="left", fill="x", expand=True, padx=8)
-        ttk.Button(row, text="찾아보기", command=lambda: self.choose_folder(variable, is_destination)).pack(side="right")
 
     def choose_folder(self, variable, is_destination):
         folder = filedialog.askdirectory(title="폴더 선택")
@@ -220,7 +232,12 @@ class PhotoOrganizer(tk.Tk):
         destination = Path(self.destination.get()) if self.destination.get() else source / "날짜별 정리"
         photos = []
         for path in source.rglob("*"):
-            if path.is_file() and path.suffix.lower() in PHOTO_EXTENSIONS and destination not in path.parents:
+            if not path.is_file() or destination in path.parents:
+                continue
+            suffix = path.suffix.lower()
+            kind = "photo" if suffix in PHOTO_EXTENSIONS else "video" if suffix in VIDEO_EXTENSIONS else "other"
+            allowed = (kind == "photo" and self.include_photos.get()) or (kind == "video" and self.include_videos.get()) or (kind == "other" and self.include_other.get())
+            if allowed or self.route_etc.get():
                 photos.append(path)
         return source, destination, photos
 
@@ -248,7 +265,9 @@ class PhotoOrganizer(tk.Tk):
             return str(date.year), f"{date.month:02d}", f"{date.day:02d}"
         return f"{date.year}년", f"{date.month:02d}월", f"{date.day:02d}일"
 
-    def get_target_folder(self, date, destination, folder_counts=None, day_ranges=None):
+    def get_target_folder(self, date, destination, folder_counts=None, day_ranges=None, force_etc=False):
+        if force_etc:
+            return destination / "ETC"
         year_label, month_label, day_label = self.format_date_parts(date)
         base_parts = [year_label]
         if self.grouping.get() != "year":
@@ -273,11 +292,16 @@ class PhotoOrganizer(tk.Tk):
         total = len(photos)
         for index, photo in enumerate(photos, 1):
             date, _ = read_capture_date(photo)
-            folder = self.get_target_folder(date, destination, day_ranges=day_ranges)
+            folder = self.get_target_folder(date, destination, day_ranges=day_ranges, force_etc=self.is_etc_file(photo))
             counts[str(folder)] = counts.get(str(folder), 0) + 1
             if progress_callback:
                 progress_callback(index, total)
         return counts
+
+    def is_etc_file(self, path):
+        suffix = path.suffix.lower()
+        kind = "photo" if suffix in PHOTO_EXTENSIONS else "video" if suffix in VIDEO_EXTENSIONS else "other"
+        return not ((kind == "photo" and self.include_photos.get()) or (kind == "video" and self.include_videos.get()) or (kind == "other" and self.include_other.get()))
 
     def clear_log(self):
         self.log.configure(state="normal")
@@ -330,7 +354,7 @@ class PhotoOrganizer(tk.Tk):
         for index, photo in enumerate(photos, 1):
             try:
                 date, source_type = read_capture_date(photo)
-                target_dir = self.get_target_folder(date, destination, folder_counts, day_ranges)
+                target_dir = self.get_target_folder(date, destination, folder_counts, day_ranges, force_etc=self.is_etc_file(photo))
                 target_dir.mkdir(parents=True, exist_ok=True)
                 target = target_dir / photo.name
                 if target.exists():

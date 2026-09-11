@@ -1,4 +1,5 @@
 const PHOTO_EXTENSIONS = new Set(["jpg", "jpeg", "png", "tif", "tiff", "webp", "heic", "heif", "bmp"]);
+const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "wmv", "webm", "m4v", "3gp", "mts", "m2ts"]);
 const state = { source: null, destination: null, files: [], plan: [] };
 
 const sourceName = document.querySelector("#source-name");
@@ -27,6 +28,10 @@ function settings() {
     interval: Number(interval.value),
     includeCount: document.querySelector("#include-count").checked,
     includeDateLabels: document.querySelector("#include-date-labels").checked,
+    includePhotos: document.querySelector("#include-photos").checked,
+    includeVideos: document.querySelector("#include-videos").checked,
+    includeOther: document.querySelector("#include-other").checked,
+    routeEtc: document.querySelector("#route-etc").checked,
   };
 }
 
@@ -56,9 +61,7 @@ async function walkDirectory(directory, prefix = "") {
       continue;
     }
     const extension = name.split(".").pop().toLowerCase();
-    if (PHOTO_EXTENSIONS.has(extension)) {
-      files.push({ file: await handle.getFile(), name, relativePath: `${prefix}${name}` });
-    }
+    files.push({ file: await handle.getFile(), name, relativePath: `${prefix}${name}`, type: PHOTO_EXTENSIONS.has(extension) ? "photo" : VIDEO_EXTENSIONS.has(extension) ? "video" : "other" });
   }
   return files;
 }
@@ -109,18 +112,23 @@ async function buildPlan() {
   const config = settings();
   setProgress("사진을 찾는 중...");
   const files = await walkDirectory(state.source);
+  const selected = files.filter((item) => {
+    const allowed = (item.type === "photo" && config.includePhotos) || (item.type === "video" && config.includeVideos) || (item.type === "other" && config.includeOther);
+    return allowed || config.routeEtc;
+  });
   state.files = files;
   const counts = new Map();
   const plan = [];
 
-  for (let index = 0; index < files.length; index += 1) {
-    const item = files[index];
+  for (let index = 0; index < selected.length; index += 1) {
+    const item = selected[index];
     const date = await captureDate(item.file);
-    const parts = targetParts(date, config);
+    const allowed = (item.type === "photo" && config.includePhotos) || (item.type === "video" && config.includeVideos) || (item.type === "other" && config.includeOther);
+    const parts = allowed ? targetParts(date, config) : ["ETC"];
     const key = parts.join("/");
     counts.set(key, (counts.get(key) || 0) + 1);
     plan.push({ ...item, parts, key });
-    setProgress(`진행 과정 (${String(index + 1).padStart(3, "0")} / ${String(files.length).padStart(3, "0")}장)`);
+    setProgress(`진행 과정 (${String(index + 1).padStart(3, "0")} / ${String(selected.length).padStart(3, "0")}장)`);
   }
   state.plan = plan;
   return { counts, config };
