@@ -70,7 +70,7 @@ async function chooseDirectory(kind) {
   if (!("showDirectoryPicker" in window)) {
     throw new Error("이 브라우저는 폴더 선택 및 쓰기를 지원하지 않습니다. Chrome 또는 Edge를 사용하세요.");
   }
-  const mode = kind === "destination" ? "readwrite" : "read";
+  const mode = "readwrite";
   const handle = await window.showDirectoryPicker({ mode, startIn: "pictures" });
   state[kind] = handle;
   if (kind === "source") sourceName.textContent = handle.name;
@@ -201,9 +201,25 @@ async function uniqueFileHandle(directory, filename) {
   }
 }
 
+async function removeSourceFile(relativePath) {
+  const parts = relativePath.split("/");
+  const filename = parts.pop();
+  let directory = state.source;
+  for (const part of parts) directory = await directory.getDirectoryHandle(part);
+  await directory.removeEntry(filename);
+}
+
 async function organizePhotos() {
   try {
+    if (!state.source) throw new Error("원본 폴더를 선택하세요.");
     if (!state.destination) throw new Error("결과 폴더를 선택하세요.");
+    const requestedAction = document.querySelector('input[name="action"]:checked').value;
+    if (requestedAction === "move") {
+      const permission = await state.source.requestPermission({ mode: "readwrite" });
+      if (permission !== "granted") {
+        throw new Error("이동하려면 원본 폴더의 수정 권한이 필요합니다. 원본 폴더를 다시 선택하고 권한을 허용하세요.");
+      }
+    }
     if (await state.source.isSameEntry(state.destination)) {
       throw new Error("원본 폴더와 결과 폴더는 서로 다르게 선택하세요.");
     }
@@ -225,7 +241,7 @@ async function organizePhotos() {
       await writable.write(item.file);
       await writable.close();
       state.resultFiles.push(`${parts.join("/")}/${target.name}`);
-      if (config.action === "move") await item.handle.remove();
+      if (config.action === "move") await removeSourceFile(item.relativePath);
       setProgress(`정리 중 (${String(index + 1).padStart(3, "0")} / ${String(state.plan.length).padStart(3, "0")}장)`);
       updateDialogProgress(index + 1, state.plan.length);
     }
