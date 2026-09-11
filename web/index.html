@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>사진 날짜별 정리 도구 - 웹</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header>
+      <p class="eyebrow">LOCAL WEB APP</p>
+      <h1>사진 날짜별 정리 도구</h1>
+      <p class="subtitle">사진을 업로드하지 않습니다. 선택한 폴더 안에서 브라우저가 직접 정리합니다.</p>
+    </header>
+
+    <section class="card folders" aria-labelledby="folder-title">
+      <h2 id="folder-title">폴더 선택</h2>
+      <div class="folder-row">
+        <div><strong>원본 폴더</strong><span id="source-name">선택되지 않음</span></div>
+        <button type="button" id="select-source">원본 폴더 선택</button>
+      </div>
+      <div class="folder-row">
+        <div><strong>결과 폴더</strong><span id="destination-name">선택되지 않음</span></div>
+        <button type="button" id="select-destination">결과 폴더 선택</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="settings-title">
+      <h2 id="settings-title">정리 설정</h2>
+      <div class="setting-row grouping-row">
+        <span class="setting-label">정리 기준</span>
+        <div class="choices" role="radiogroup" aria-label="정리 기준">
+          <label><input type="radio" name="grouping" value="year"> 연도별</label>
+          <label><input type="radio" name="grouping" value="month"> 월별 (연도 포함)</label>
+          <label><input type="radio" name="grouping" value="day" checked> 일별 (연도/월 포함)</label>
+        </div>
+        <label class="interval-control">날짜 간격 <select id="interval" aria-label="날짜 간격"></select> 일</label>
+      </div>
+      <div class="detail-settings">
+        <span class="setting-label">세부 설정</span>
+        <div class="detail-options">
+          <label><input type="checkbox" id="include-count" checked> 폴더명 뒤에 사진 수 표시 <small>예: 05일 (12장)</small></label>
+          <label><input type="checkbox" id="include-date-labels" checked> 년-월-일 입력 <small>예: 2024년 / 03월 / 05일</small></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="card preview-card" aria-labelledby="preview-title">
+      <div class="preview-heading">
+        <h2 id="preview-title">결과 미리보기</h2>
+        <span id="progress" aria-live="polite">준비됨</span>
+      </div>
+      <div id="preview" class="preview" aria-live="polite">원본 폴더를 선택한 뒤 결과 미리보기를 눌러주세요.</div>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="secondary" id="preview-button">결과 미리보기</button>
+      <button type="button" class="primary" id="organize-button">▶ 사진 정리 시작</button>
+    </div>
+    <p class="notice">Chrome 또는 Edge에서 사용하세요. 원본 사진은 복사되며 삭제되지 않습니다.</p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/exifr/dist/full.umd.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
