@@ -23,7 +23,7 @@ label { cursor: pointer; }
 select { margin: 0 4px; padding: 5px; border: 1px solid #bbb; border-radius: 5px; background: white; }
 .detail-settings { align-items: flex-start; border-top: 1px solid #ecece8; margin-top: 8px; padding-top: 16px; }
 .detail-options { display: grid; gap: 10px; }
-.action-options { border: 0; padding: 0; margin: 0; display: flex; gap: 12px; align-items: center; }
+.action-options { border: 0; padding: 0; margin: 10px 0 0; display: flex; gap: 12px; align-items: center; }
 .action-options legend { font-weight: 700; padding: 0; margin-right: 4px; }
 small { color: #777; margin-left: 6px; }
 .preview-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
