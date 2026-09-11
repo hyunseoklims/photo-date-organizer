@@ -9,6 +9,12 @@ const progress = document.querySelector("#progress");
 const interval = document.querySelector("#interval");
 const previewButton = document.querySelector("#preview-button");
 const organizeButton = document.querySelector("#organize-button");
+const progressDialog = document.querySelector("#progress-dialog");
+const dialogProgressText = document.querySelector("#dialog-progress-text");
+const dialogProgressBar = document.querySelector("#dialog-progress-bar");
+const dialogResult = document.querySelector("#dialog-result");
+const openResultFolderButton = document.querySelector("#open-result-folder");
+const closeProgressDialogButton = document.querySelector("#close-progress-dialog");
 
 for (let day = 1; day <= 31; day += 1) {
   interval.add(new Option(day, day));
@@ -16,6 +22,20 @@ for (let day = 1; day <= 31; day += 1) {
 
 function setProgress(message) {
   progress.textContent = message;
+}
+
+function openProgressDialog(total) {
+  dialogProgressText.textContent = `정리 준비 중 (000 / ${String(total).padStart(3, "0")}개)`;
+  dialogProgressBar.value = 0;
+  dialogResult.textContent = "";
+  openResultFolderButton.hidden = true;
+  closeProgressDialogButton.disabled = true;
+  if (!progressDialog.open) progressDialog.showModal();
+}
+
+function updateDialogProgress(current, total) {
+  dialogProgressText.textContent = `작업 진행 (${String(current).padStart(3, "0")} / ${String(total).padStart(3, "0")}개)`;
+  dialogProgressBar.value = total ? (current / total) * 100 : 100;
 }
 
 function selectedGrouping() {
@@ -184,7 +204,9 @@ async function organizePhotos() {
       throw new Error("원본 폴더와 결과 폴더는 서로 다르게 선택하세요.");
     }
     organizeButton.disabled = true;
+    openProgressDialog(0);
     const { counts, config } = await buildPlan();
+    openProgressDialog(state.plan.length);
     for (let index = 0; index < state.plan.length; index += 1) {
       const item = state.plan[index];
       const parts = item.parts.map((part, partIndex) => (
@@ -199,12 +221,21 @@ async function organizePhotos() {
       await writable.close();
       if (config.action === "move") await item.handle.remove();
       setProgress(`정리 중 (${String(index + 1).padStart(3, "0")} / ${String(state.plan.length).padStart(3, "0")}장)`);
+      updateDialogProgress(index + 1, state.plan.length);
     }
     preview.textContent += `\n\n정리가 완료되었습니다. 결과 폴더: ${state.destination.name}`;
     setProgress(`완료 (${state.plan.length} / ${state.plan.length}장)`);
+    dialogProgressText.textContent = "작업이 완료되었습니다.";
+    dialogResult.textContent = `결과 폴더: ${state.destination.name}`;
+    openResultFolderButton.hidden = false;
+    closeProgressDialogButton.disabled = false;
   } catch (error) {
     preview.textContent += `\n\n오류: ${error.message}`;
     setProgress("오류");
+    if (!progressDialog.open) progressDialog.showModal();
+    dialogProgressText.textContent = "작업 중 오류가 발생했습니다.";
+    dialogResult.textContent = error.message;
+    closeProgressDialogButton.disabled = false;
   } finally {
     organizeButton.disabled = false;
   }
@@ -219,4 +250,12 @@ document.querySelector("#select-destination").addEventListener("click", async ()
 document.querySelectorAll('input[name="grouping"]').forEach((input) => input.addEventListener("change", updateIntervalState));
 previewButton.addEventListener("click", previewResults);
 organizeButton.addEventListener("click", organizePhotos);
+closeProgressDialogButton.addEventListener("click", () => progressDialog.close());
+openResultFolderButton.addEventListener("click", async () => {
+  try {
+    await window.showDirectoryPicker({ mode: "read", startIn: state.destination });
+  } catch (error) {
+    if (error.name !== "AbortError") alert(error.message);
+  }
+});
 updateIntervalState();
