@@ -44,3 +44,13 @@ small { color: #777; margin-left: 6px; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 .dialog-actions #show-result-files { background: #111; color: #fff; border-color: #111; }
 @media (max-width: 720px) { .setting-row, .detail-settings { align-items: flex-start; flex-direction: column; gap: 8px; } .setting-label { width: auto; } .folder-row { align-items: flex-start; flex-direction: column; } .actions { flex-direction: column; } .primary, .secondary { width: 100%; } }
+
+.settings-group { border-top: 1px solid #ecece8; padding-top: 14px; margin-top: 14px; }
+.settings-group:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.settings-group h3 { font-size: 14px; margin: 0 0 8px; }
+.detail-panel { padding-bottom: 2px; }
+.detail-panel summary { cursor: pointer; font-weight: 700; font-size: 14px; list-style-position: outside; margin-left: 2px; }
+.detail-panel summary::marker { color: #666; }
+.detail-content { margin-top: 10px; }
+.detail-content .action-options { padding-left: 0; }
+@media (max-width: 720px) { .detail-content .action-options { align-items: flex-start; flex-direction: column; gap: 8px; } }
