@@ -16,21 +16,23 @@
 
     <section class="card folders" aria-labelledby="folder-title">
       <h2 id="folder-title">폴더 선택</h2>
-      <div class="folder-row">
-        <button type="button" id="select-source">원본 폴더 선택</button>
-        <div class="folder-path"><span id="source-name">선택되지 않음</span></div>
-      </div>
-      <div class="folder-row">
-        <button type="button" id="select-destination">결과 폴더 선택</button>
-        <div class="folder-path"><span id="destination-name">선택되지 않음</span></div>
+      <div class="folder-grid">
+        <div class="folder-box">
+          <div><strong>원본 폴더</strong><span id="source-name">선택되지 않음</span></div>
+          <button type="button" id="select-source">폴더 선택</button>
+        </div>
+        <div class="folder-box">
+          <div><strong>결과 폴더</strong><span id="destination-name">선택되지 않음</span></div>
+          <button type="button" id="select-destination">폴더 선택</button>
+        </div>
       </div>
     </section>
 
     <section class="card" aria-labelledby="settings-title">
       <h2 id="settings-title">기본 설정</h2>
 
-      <div class="settings-group basic-settings">
-        <div class="setting-row grouping-row">
+      <div class="settings-group basic-settings basic-grid">
+        <div class="setting-row grouping-row setting-box">
           <span class="setting-label">정리 기준</span>
           <div class="choices" role="radiogroup" aria-label="정리 기준">
             <label><input type="radio" name="grouping" value="year"> 연도별</label>
@@ -39,7 +41,7 @@
           </div>
           <label class="interval-control">날짜 간격 <select id="interval" aria-label="날짜 간격"></select> 일</label>
         </div>
-        <div class="setting-row grouping-row">
+        <div class="setting-row grouping-row setting-box">
           <span class="setting-label">파일 설정</span>
           <div class="choices file-types">
             <label><input type="checkbox" id="include-photos" checked> 사진</label>
@@ -57,7 +59,7 @@
         <section class="card detail-card" aria-label="세부 설정">
           <div class="detail-content">
           <div class="detail-settings">
-            <span class="setting-label">세부 설정</span>
+            <span class="setting-label">분류 옵션</span>
             <div class="detail-options">
               <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음 <small>예: 미선택시 원본폴더에 보관</small></label>
               <label><input type="checkbox" id="include-count" checked> 폴더명 뒤에 사진 수 표시 <small>예: 05일 (12장)</small></label>
