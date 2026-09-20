@@ -57,6 +57,7 @@ function settings() {
     includeOther: document.querySelector("#include-other").checked,
     routeEtc: document.querySelector("#route-etc").checked,
     action: document.querySelector('input[name="action"]:checked').value,
+    overwriteExisting: document.querySelector("#overwrite-existing").checked,
   };
 }
 
@@ -186,7 +187,8 @@ async function getTargetDirectory(parts) {
   return directory;
 }
 
-async function uniqueFileHandle(directory, filename) {
+async function targetFileHandle(directory, filename, overwriteExisting) {
+  if (overwriteExisting) return directory.getFileHandle(filename, { create: true });
   const dot = filename.lastIndexOf(".");
   const stem = dot > 0 ? filename.slice(0, dot) : filename;
   const extension = dot > 0 ? filename.slice(dot) : "";
@@ -214,6 +216,11 @@ async function organizePhotos() {
     if (!state.source) throw new Error("원본 폴더를 선택하세요.");
     if (!state.destination) throw new Error("결과 폴더를 선택하세요.");
     const requestedAction = document.querySelector('input[name="action"]:checked').value;
+    const overwriteExisting = document.querySelector("#overwrite-existing").checked;
+    if (overwriteExisting) {
+      const confirmed = window.confirm("동일한 이름의 파일이 결과 폴더에 이미 있으면 기존 파일을 덮어씁니다.\n\n계속 진행하시겠습니까?");
+      if (!confirmed) return;
+    }
     if (requestedAction === "move") {
       const permission = await state.source.requestPermission({ mode: "readwrite" });
       if (permission !== "granted") {
@@ -236,7 +243,7 @@ async function organizePhotos() {
           : part
       ));
       const targetDirectory = await getTargetDirectory(parts);
-      const target = await uniqueFileHandle(targetDirectory, item.name);
+      const target = await targetFileHandle(targetDirectory, item.name, config.overwriteExisting);
       const writable = await target.createWritable();
       await writable.write(item.file);
       await writable.close();
