@@ -54,3 +54,37 @@ small { color: #777; margin-left: 6px; }
 .detail-content { margin-top: 10px; }
 .detail-content .action-options { padding-left: 0; }
 @media (max-width: 720px) { .detail-content .action-options { align-items: flex-start; flex-direction: column; gap: 8px; } }
+
+/* Settings section refinement */
+.basic-settings { border-top: 0; padding-top: 0; margin-top: 0; }
+.detail-panel { position: relative; margin-top: 18px; padding-top: 18px; border-top: 1px solid #deded9; }
+.detail-panel > summary {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  padding: 6px 14px;
+  border: 1px solid #c9c9c4;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+  z-index: 1;
+}
+.detail-panel > summary::-webkit-details-marker { display: none; }
+.detail-panel > summary::after { content: "⌄"; margin-left: 7px; font-size: 13px; }
+.detail-panel[open] > summary::after { content: "⌃"; }
+.detail-panel > .detail-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #fafaf8;
+}
