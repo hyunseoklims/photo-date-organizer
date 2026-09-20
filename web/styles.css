@@ -132,3 +132,56 @@ small { color: #777; margin-left: 6px; }
 }
 .detail-card .detail-panel[open] > .detail-content { display: grid; }
 .preview-card { position: relative; z-index: 0; }
+
+/* Kinder Edu shared UI v1.0 — visual layer only; existing layout/grid positions preserved */
+:root{
+  --ke-bg:#f7f5ef;
+  --ke-surface:#fffdf8;
+  --ke-ink:#24241f;
+  --ke-muted:#76766e;
+  --ke-line:#e8e5dc;
+  --ke-green:#789b52;
+  --ke-green-soft:#edf3df;
+  --ke-radius:22px;
+  --ke-shadow:0 10px 30px rgba(50,55,45,.06);
+}
+body{
+  background:var(--ke-bg);
+  color:var(--ke-ink);
+  font-family:"Pretendard Variable","Pretendard",-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+}
+.eyebrow{color:var(--ke-green);font-weight:800;letter-spacing:.14em}
+h1,h2{color:var(--ke-ink)}
+.card{
+  background:var(--ke-surface);
+  border-color:var(--ke-line);
+  border-radius:var(--ke-radius);
+  box-shadow:var(--ke-shadow);
+}
+.folder-row,.settings-group,.detail-card .detail-panel > .detail-content{border-color:var(--ke-line)}
+.folder-row span,#progress,.notice,small{color:var(--ke-muted)}
+button{
+  border-color:#dddcd4;
+  border-radius:12px;
+  background:#fff;
+  color:var(--ke-ink);
+  transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+button:hover{background:var(--ke-green-soft);border-color:#d4dfc3}
+input[type="checkbox"],input[type="radio"]{accent-color:var(--ke-green)}
+select{border-color:#d9d8d0;border-radius:9px;background:#fff}
+.preview,.result-file-list{background:#faf9f4;border-color:var(--ke-line);border-radius:14px}
+.primary,.dialog-actions #show-result-files{
+  background:#314250;
+  border-color:#314250;
+  color:#fff;
+}
+.primary:hover,.dialog-actions #show-result-files:hover{background:#3e5262;border-color:#3e5262}
+.detail-card .detail-panel > summary{
+  border-color:#d9ddd1;
+  background:var(--ke-surface);
+  color:#4d5843;
+  box-shadow:0 4px 12px rgba(50,55,45,.07);
+}
+.progress-dialog{border-color:var(--ke-line);border-radius:20px}
+.progress-dialog progress{accent-color:var(--ke-green)}
