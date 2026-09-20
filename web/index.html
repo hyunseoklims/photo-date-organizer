@@ -28,36 +28,50 @@
 
     <section class="card" aria-labelledby="settings-title">
       <h2 id="settings-title">정리 설정</h2>
-      <div class="setting-row grouping-row">
-        <span class="setting-label">파일 종류</span>
-        <div class="choices file-types">
-          <label><input type="checkbox" id="include-photos" checked> 사진</label>
-          <label><input type="checkbox" id="include-videos"> 영상</label>
-          <label><input type="checkbox" id="include-other"> 기타 파일</label>
+
+      <div class="settings-group">
+        <h3>기본 설정</h3>
+        <div class="setting-row grouping-row">
+          <span class="setting-label">정리 기준</span>
+          <div class="choices" role="radiogroup" aria-label="정리 기준">
+            <label><input type="radio" name="grouping" value="year"> 연도별</label>
+            <label><input type="radio" name="grouping" value="month"> 월별 (연도 포함)</label>
+            <label><input type="radio" name="grouping" value="day" checked> 일별 (연도/월 포함)</label>
+          </div>
+          <label class="interval-control">날짜 간격 <select id="interval" aria-label="날짜 간격"></select> 일</label>
+        </div>
+        <div class="setting-row grouping-row">
+          <span class="setting-label">파일 설정</span>
+          <div class="choices file-types">
+            <label><input type="checkbox" id="include-photos" checked> 사진</label>
+            <label><input type="checkbox" id="include-videos"> 영상</label>
+            <label><input type="checkbox" id="include-other"> 기타 파일</label>
+          </div>
         </div>
       </div>
-      <div class="setting-row grouping-row">
-        <span class="setting-label">정리 기준</span>
-        <div class="choices" role="radiogroup" aria-label="정리 기준">
-          <label><input type="radio" name="grouping" value="year"> 연도별</label>
-          <label><input type="radio" name="grouping" value="month"> 월별 (연도 포함)</label>
-          <label><input type="radio" name="grouping" value="day" checked> 일별 (연도/월 포함)</label>
+
+      <details class="settings-group detail-panel">
+        <summary>세부 설정</summary>
+        <div class="detail-content">
+          <div class="detail-settings">
+            <span class="setting-label">세부 설정</span>
+            <div class="detail-options">
+              <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음 <small>예: 미선택시 원본폴더에 보관</small></label>
+              <label><input type="checkbox" id="include-count" checked> 폴더명 뒤에 사진 수 표시 <small>예: 05일 (12장)</small></label>
+              <label><input type="checkbox" id="include-date-labels" checked> 년-월-일 입력 <small>예: 2024년 / 03월 / 05일</small></label>
+            </div>
+          </div>
+          <div class="action-options">
+            <span class="setting-label">처리 방식</span>
+            <label><input type="radio" name="action" value="copy" checked> 복사 (원본 보관)</label>
+            <label><input type="radio" name="action" value="move"> 이동 (원본 삭제)</label>
+          </div>
+          <div class="action-options">
+            <span class="setting-label">파일 충돌</span>
+            <label><input type="checkbox" id="overwrite-existing" checked> 동일 이름 파일 덮어쓰기 <small>실행 전에 다시 확인합니다.</small></label>
+          </div>
         </div>
-        <label class="interval-control">날짜 간격 <select id="interval" aria-label="날짜 간격"></select> 일</label>
-      </div>
-      <div class="detail-settings">
-        <span class="setting-label">세부 설정</span>
-        <div class="detail-options">
-          <label><input type="checkbox" id="route-etc" checked> 미선택 파일은 ETC 폴더로 모음 <small>예: 미선택시 원본폴더에 보관</small></label>
-          <label><input type="checkbox" id="include-count" checked> 폴더명 뒤에 사진 수 표시 <small>예: 05일 (12장)</small></label>
-          <label><input type="checkbox" id="include-date-labels" checked> 년-월-일 입력 <small>예: 2024년 / 03월 / 05일</small></label>
-        </div>
-      </div>
-      <div class="action-options">
-        <span class="action-label">처리 방식</span>
-        <label><input type="radio" name="action" value="copy" checked> 복사 (원본 보관)</label>
-        <label><input type="radio" name="action" value="move"> 이동 (원본 삭제)</label>
-      </div>
+      </details>
     </section>
 
     <section class="card preview-card" aria-labelledby="preview-title">
@@ -72,7 +86,7 @@
     <div class="actions">
       <button type="button" class="primary" id="organize-button">▶ 사진 정리 시작</button>
     </div>
-    <p class="notice">Chrome 또는 Edge에서 사용하세요. 원본 사진은 복사되며 삭제되지 않습니다.</p>
+    <p class="notice">Chrome 또는 Edge에서 사용하세요. 처리 방식에 따라 원본 파일이 보관되거나 이동됩니다.</p>
   </main>
 
   <dialog id="progress-dialog" class="progress-dialog">
